@@ -14,6 +14,10 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
+<br/>
+
+![Student Registration Portal Dashboard](docs/banner.png)
+
 </div>
 
 ---
@@ -179,27 +183,3 @@ The database seeds two accounts on startup:
 | `DELETE` | `/api/registrations/{id}` | JWT | Drop a course |
 | `GET` | `/api/registrations/all` | Admin JWT | View all registrations |
 
----
-
-## Environment Variables
-
-The backend reads from `application.properties`. Key values:
-
-```properties
-spring.datasource.url=jdbc:h2:mem:student_registration
-spring.jpa.hibernate.ddl-auto=create-drop
-app.jwt.secret=your-secret-key-here
-app.jwt.expiration=86400000
-```
-
----
-
-## License
-
-MIT. Use it, fork it, learn from it.
-
----
-
-<div align="center">
-  <sub>Built with Java, React, and a strong opinion about clean architecture.</sub>
-</div>
