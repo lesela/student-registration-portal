@@ -1,6 +1,7 @@
 # Maven build and dependencies
 backend/target/
 backend/apache-maven-3.9.6/
+backend/jre/
 
 # Frontend dependencies and builds
 frontend/node_modules/
