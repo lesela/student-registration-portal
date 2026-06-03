@@ -1,0 +1,21 @@
+# Maven build and dependencies
+backend/target/
+backend/apache-maven-3.9.6/
+
+# Frontend dependencies and builds
+frontend/node_modules/
+frontend/dist/
+frontend/.env*
+
+# IDE configuration files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# System files
+Thumbs.db
+.DS_Store
