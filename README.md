@@ -67,12 +67,11 @@ student-registration-portal/
 
 ### Backend Service
 
-1. Ensure Java 21 is installed. The runtime environment is configured at:
-   `C:\Users\USER\.antigravity\extensions\redhat.java-1.54.0-win32-x64\jre\21.0.10-win32-x86_64\bin\`
+1. Ensure Java 21 is installed.
 
 2. Navigate to the backend directory and run:
    ```bash
-   "C:\Users\USER\.antigravity\extensions\redhat.java-1.54.0-win32-x64\jre\21.0.10-win32-x86_64\bin\java.exe" -jar target/portal-0.0.1-SNAPSHOT.jar
+   java -jar target/portal-0.0.1-SNAPSHOT.jar
    ```
 
 * Seeding: The application automatically seeds 10 courses and a student profile on startup.
