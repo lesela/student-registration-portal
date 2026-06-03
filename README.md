@@ -1,125 +1,205 @@
-# Lesela eCourse
+<div align="center">
 
-Lesela eCourse is a modern, responsive course registration system that provides students with an interactive workspace to plan, validate, and manage their semester schedules. The project is split into a Spring Boot backend API and a React frontend client.
+```
+╔═══════════════════════════════════════════════════════════╗
+║           STUDENT REGISTRATION PORTAL                     ║
+║           A full-stack academic management system         ║
+╚═══════════════════════════════════════════════════════════╝
+```
 
----
+[![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-## Workspace Capabilities
-
-The system handles core registration workflows:
-* Multi-facet catalog search by code, name, department, day, and availability.
-* Real-time course drafting via an active registration cart.
-* Live schedule clash detection to prevent duplicate time-slot bookings.
-* Integrated weekly timetable calendar with scheduled class popups.
-* Administrative course drop operations and academic history listings.
-
----
-
-## Architecture and Design Decisions
-
-### Technical Stack
-* Backend API: Spring Boot 3 with Java 21, Spring Security (JWT), and H2 Database.
-* Frontend Client: React 19, TypeScript, Vite, TanStack React Query, and Framer Motion.
-
-### Stateless Security Model
-The backend implements stateless authentication using JSON Web Tokens (JWT). Student credentials are validated against hashed database entries, and a signed token is returned. The client stores this token and sends it in the Authorization header of all subsequent API requests.
-
-### Client-Side Cache Sync
-To minimize API requests and ensure instant interface updates, the frontend uses TanStack React Query. Catalog searches, active registrations, and profile changes are automatically cached. Mutation actions trigger targeted cache invalidation, forcing silent background refreshes.
-
-### Calendar Timetable Generation
-The dashboard calendar matches student enrollments to dates on a dynamic grid. When a student registers for a course, the calendar filters date matches for the course's designated weekday and maps scheduled sessions into interactive tooltips.
-
-### Schedule Overlap Logic
-Schedule overlap checks are performed before both cart additions and final DB commits. If the start and end times of two courses on the same weekday intersect, a conflict warning is shown. The intersection rule is:
-`Max(Start_Time_A, Start_Time_B) < Min(End_Time_A, End_Time_B)`
+</div>
 
 ---
 
-## Directory Map
+## What This Is
+
+A production-grade, full-stack web application for managing student course registrations. It handles the full lifecycle — from browsing a course catalog, to detecting scheduling conflicts in real time, to managing enrollments through a protected admin panel.
+
+Built without a framework scaffold. Every design decision was intentional.
+
+---
+
+## The Problem It Solves
+
+University registration systems are notoriously bad. Slow, confusing, and prone to errors like double-booking a student into overlapping courses. This project addresses that directly:
+
+- Students can browse courses, add them to a cart, and register — all in one flow.
+- The system detects **time conflicts** before they happen, using an interval-overlap algorithm on the server.
+- Admins have a dedicated panel to view and manage all registrations.
+- Sessions are stateless — JWT tokens are issued at login and verified on every request.
+
+---
+
+## Architecture
+
+```
+┌─────────────────────┐        REST / JSON        ┌──────────────────────────┐
+│                     │  ─────────────────────►   │                          │
+│   React 19 + Vite   │                           │  Spring Boot 3 (Java 21) │
+│   TypeScript        │  ◄─────────────────────   │  Stateless JWT Auth      │
+│   Tailwind CSS      │        HTTP 200 / 4xx      │  H2 In-Memory Database   │
+│   TanStack Query    │                           │  JPA / Hibernate ORM     │
+│                     │                           │                          │
+└─────────────────────┘                           └──────────────────────────┘
+         │                                                    │
+    Port 5173                                            Port 8080
+```
+
+**Conflict detection formula:**
+
+```
+Conflicts if:  Max(Start_A, Start_B)  <  Min(End_A, End_B)
+```
+
+This single check is run server-side on every registration request. If it triggers, the request is rejected before any database write occurs.
+
+---
+
+## Project Structure
 
 ```
 student-registration-portal/
-├── backend/
+│
+├── backend/                        # Spring Boot application
 │   ├── src/main/java/com/saas/portal/
-│   │   ├── config/          # Security filters, database initializers, and seeds
-│   │   ├── controller/      # API entry points (Auth, Course, Registration)
-│   │   ├── dto/             # Network request/response data shapes
-│   │   ├── exception/       # Business error mappings and validation handlers
-│   │   ├── mapper/          # Compiled MapStruct translator definitions
-│   │   ├── model/           # JPA entities representing database tables
-│   │   ├── repository/      # Database queries via Spring Data interfaces
-│   │   └── security/        # JWT parsing filters and user authorities
-│   ├── src/main/resources/  # H2 properties and application configurations
-│   └── pom.xml              # Maven dependency specifications
-└── frontend/
-    ├── src/
-    │   ├── components/      # UI components (buttons, input fields, cart drawer)
-    │   ├── context/         # Auth contexts, cart contexts, and toast queues
-    │   ├── layouts/         # Collapsible page shells and layouts
-    │   ├── pages/           # Views (Login, Dashboard, Catalog, Management)
-    │   ├── services/        # Service clients for API communication
-    │   ├── types/           # Core TypeScript type definitions
-    │   └── utils/           # Utility files
-    ├── index.html           # Root entry document
+│   │   ├── controller/             # REST endpoints (Auth, Course, Registration)
+│   │   ├── service/                # Business logic and conflict detection
+│   │   ├── model/                  # JPA entities (Student, Course, Registration)
+│   │   ├── repository/             # Spring Data JPA repositories
+│   │   ├── security/               # JWT filter, token util, security config
+│   │   └── dto/                    # Request/Response transfer objects
+│   └── src/main/resources/
+│       └── application.properties  # DB config, JWT secret, CORS
+│
+└── frontend/                       # React + Vite application
+    └── src/
+        ├── components/
+        │   ├── auth/               # Login, Register forms
+        │   ├── layout/             # Navbar, Sidebar, Shell
+        │   └── registration/       # CartDrawer, CourseCard
+        ├── pages/                  # Dashboard, Catalog, Management
+        ├── context/                # CartContext (global registration state)
+        ├── hooks/                  # useAuth, useCart, useRegistrations
+        ├── api/                    # Axios client + typed API calls
+        └── types/                  # Shared TypeScript interfaces
 ```
 
 ---
 
-## User Interface Walkthrough
+## Getting Started
 
-Below are screenshots of the portal views detailing the layouts and interactive features.
+### Prerequisites
 
-### Student Dashboard Overview
-
-The dashboard serves as the central hub of the portal. It features the student identity card showing name and ID, along with three quick statistics blocks: the count of registered courses, active drafts in the registration cart, and the total weekly course days. Below these controls is the main workspace, which displays either the registered course list or course catalog preview cards depending on current enrollment.
-
-![Student Dashboard Overview](docs/images/dashboard_overview.png)
-
-### Dashboard Calendar Interface
-
-The right column of the dashboard contains an interactive calendar. It highlights scheduled class days dynamically by referencing the student's active enrollments and cart items. Hovering over a highlighted date displays a detailed tooltip detailing the courses scheduled for that day.
-
-![Dashboard Calendar Interface](docs/images/dashboard_calendar.png)
-
-### Course Directory Catalog
-
-The catalog view allows students to search through the directory. It includes department selectors, keyword search bars, and course availability toggles. Course cards display details such as course code, name, description, scheduled day and time, seat capacity, and action buttons to add or remove courses from the cart.
-
-![Course Directory Catalog](docs/images/course_catalog.png)
-
-### Academic Registration Manager
-
-The management page lists all active semester registrations. Students can view details or initiate dropping a course via a drop confirmation modal. The page also displays historical academic courses with completed grades and semesters.
-
-![Academic Registration Manager](docs/images/management_page.png)
+| Tool | Version |
+|------|---------|
+| Java | 21+ |
+| Node.js | 18+ |
+| Maven | 3.8+ |
 
 ---
 
-## System Requirements and Installation
+### Backend
 
-### Backend Execution
-1. Install Java Development Kit (JDK) 21.
-2. Navigate to the `/backend` folder.
-3. Run the compiled JAR:
-   ```bash
-   java -jar target/portal-0.0.1-SNAPSHOT.jar
-   ```
+```bash
+cd backend
+mvn clean package -DskipTests
+java -jar target/portal-0.0.1-SNAPSHOT.jar
+```
 
-* Initial Seed Data: On startup, the system seeds 10 sample courses and a student profile.
-* Seed Account: `lesela@university.edu` / `password`
-* API Console: Swagger documentation is available at `http://localhost:8080/swagger-ui/index.html`
-* Database Console: H2 web interface is available at `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:student_registration`, username: `sa`, empty password)
+The API will be available at `http://localhost:8080`.
 
-### Frontend Execution
-1. Install Node.js (version 20 or higher).
-2. Navigate to the `/frontend` directory.
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
-5. Access the application in your browser at `http://localhost:5173`.
+The H2 console (for inspecting the in-memory database) is available at:
+`http://localhost:8080/h2-console`
+
+Use `jdbc:h2:mem:student_registration` as the JDBC URL.
+
+---
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The app will be available at `http://localhost:5173`.
+
+---
+
+### Default Credentials
+
+The database seeds two accounts on startup:
+
+| Role | Username | Password |
+|------|----------|----------|
+| Admin | `admin` | `admin123` |
+| Student | `student` | `student123` |
+
+---
+
+## Key Features
+
+**For Students**
+- Browse the full course catalog with schedule details
+- Add courses to a cart before committing
+- Conflict detection prevents overlapping schedules
+- View all current registrations from the dashboard
+- Drop courses individually
+
+**For Admins**
+- View all student registrations across the system
+- Remove any registration
+- Access the H2 console for direct DB inspection
+
+**System**
+- JWT authentication — no sessions stored server-side
+- CORS configured for local development
+- Clean error messages returned as JSON
+- All state managed with TanStack Query (no Redux)
+
+---
+
+## API Reference
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/auth/login` | None | Returns JWT token |
+| `POST` | `/api/auth/register` | None | Creates a student account |
+| `GET` | `/api/courses` | JWT | List all courses |
+| `POST` | `/api/registrations` | JWT | Register for a course |
+| `GET` | `/api/registrations/my` | JWT | Get current student's registrations |
+| `DELETE` | `/api/registrations/{id}` | JWT | Drop a course |
+| `GET` | `/api/registrations/all` | Admin JWT | View all registrations |
+
+---
+
+## Environment Variables
+
+The backend reads from `application.properties`. Key values:
+
+```properties
+spring.datasource.url=jdbc:h2:mem:student_registration
+spring.jpa.hibernate.ddl-auto=create-drop
+app.jwt.secret=your-secret-key-here
+app.jwt.expiration=86400000
+```
+
+---
+
+## License
+
+MIT. Use it, fork it, learn from it.
+
+---
+
+<div align="center">
+  <sub>Built with Java, React, and a strong opinion about clean architecture.</sub>
+</div>
