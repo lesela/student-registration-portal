@@ -62,8 +62,37 @@ student-registration-portal/
     │   ├── types/           # Core TypeScript type definitions
     │   └── utils/           # Utility files
     ├── index.html           # Root entry document
-    └── package.json         # NPM package dependencies
 ```
+
+---
+
+## User Interface Walkthrough
+
+Below are screenshots of the portal views detailing the layouts and interactive features.
+
+### Student Dashboard Overview
+
+The dashboard serves as the central hub of the portal. It features the student identity card showing name and ID, along with three quick statistics blocks: the count of registered courses, active drafts in the registration cart, and the total weekly course days. Below these controls is the main workspace, which displays either the registered course list or course catalog preview cards depending on current enrollment.
+
+![Student Dashboard Overview](docs/images/dashboard_overview.png)
+
+### Dashboard Calendar Interface
+
+The right column of the dashboard contains an interactive calendar. It highlights scheduled class days dynamically by referencing the student's active enrollments and cart items. Hovering over a highlighted date displays a detailed tooltip detailing the courses scheduled for that day.
+
+![Dashboard Calendar Interface](docs/images/dashboard_calendar.png)
+
+### Course Directory Catalog
+
+The catalog view allows students to search through the directory. It includes department selectors, keyword search bars, and course availability toggles. Course cards display details such as course code, name, description, scheduled day and time, seat capacity, and action buttons to add or remove courses from the cart.
+
+![Course Directory Catalog](docs/images/course_catalog.png)
+
+### Academic Registration Manager
+
+The management page lists all active semester registrations. Students can view details or initiate dropping a course via a drop confirmation modal. The page also displays historical academic courses with completed grades and semesters.
+
+![Academic Registration Manager](docs/images/management_page.png)
 
 ---
 
