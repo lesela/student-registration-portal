@@ -128,14 +128,20 @@ export const RegisterPage: React.FC = () => {
               </div>
 
               <div className="pt-2">
-                <Button
+                <button
                   type="submit"
-                  className="w-full flex items-center justify-center space-x-2"
-                  isLoading={isLoading}
+                  disabled={isLoading}
+                  className="shimmer-btn w-full h-10 rounded-xl text-white text-sm font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                 >
-                  <span>Create Account</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
+                  {isLoading ? (
+                    <span className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <span>Create Account</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
               </div>
             </form>
           </CardContent>

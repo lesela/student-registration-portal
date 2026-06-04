@@ -104,6 +104,12 @@ public class RegistrationService {
         return registrationMapper.toResponseList(registrations);
     }
 
+    @Transactional(readOnly = true)
+    public List<RegistrationResponse> getAllRegistrations() {
+        List<Registration> registrations = registrationRepository.findAll();
+        return registrationMapper.toResponseList(registrations);
+    }
+
     @Transactional
     public void unregisterCourse(Long registrationId) {
         Registration registration = registrationRepository.findById(registrationId)

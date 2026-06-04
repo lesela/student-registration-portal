@@ -25,7 +25,8 @@ public class UserPrincipal implements UserDetails {
     }
 
     public static UserPrincipal create(Student student) {
-        Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_STUDENT"));
+        String authority = "ADMIN".equals(student.getRole()) ? "ROLE_ADMIN" : "ROLE_STUDENT";
+        Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(authority));
         return new UserPrincipal(
                 student.getId(),
                 student.getName(),

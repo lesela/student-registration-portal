@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   GraduationCap, LayoutDashboard, BookOpen, FileText, Settings, LogOut, 
-  Menu, X, ShoppingCart, ChevronRight 
+  Menu, X, ShoppingCart, ChevronRight, ShieldCheck
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
@@ -15,18 +15,25 @@ interface DashboardLayoutProps {
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onOpenCart }) => {
-  const { student, logout } = useAuth();
+  const { student, logout, isAdmin } = useAuth();
   const { cartItems } = useCart();
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const navLinks = [
+  const studentNavLinks = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Course Catalog', path: '/catalog', icon: BookOpen },
     { name: 'My Registrations', path: '/management', icon: FileText },
     { name: 'Profile Settings', path: '/settings', icon: Settings },
   ];
+
+  const adminNavLinks = [
+    { name: 'Admin Panel', path: '/admin', icon: ShieldCheck },
+    { name: 'Profile Settings', path: '/settings', icon: Settings },
+  ];
+
+  const navLinks = isAdmin ? adminNavLinks : studentNavLinks;
 
   const handleLogout = () => {
     logout();
@@ -199,21 +206,23 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onOp
           <div className="flex items-center space-x-4 ml-auto md:ml-0">
             <ThemeSwitcher />
 
-            {/* Cart Button */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onOpenCart}
-              className="relative p-2 rounded-full glass border-white/20 dark:border-white/10 text-muted-foreground hover:text-foreground hover:bg-muted transition-all shadow-sm"
-              title="Cart Drawer"
-            >
-              <ShoppingCart className="h-5 w-5 text-primary" />
-              {cartItems.length > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground animate-pulse">
-                  {cartItems.length}
-                </span>
-              )}
-            </motion.button>
+            {/* Cart Button — hidden for admins */}
+            {!isAdmin && (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onOpenCart}
+                className="relative p-2 rounded-full glass border-white/20 dark:border-white/10 text-muted-foreground hover:text-foreground hover:bg-muted transition-all shadow-sm"
+                title="Cart Drawer"
+              >
+                <ShoppingCart className="h-5 w-5 text-primary" />
+                {cartItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground animate-pulse">
+                    {cartItems.length}
+                  </span>
+                )}
+              </motion.button>
+            )}
 
             {/* Mock User Details */}
             <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-xs text-primary shadow-inner">

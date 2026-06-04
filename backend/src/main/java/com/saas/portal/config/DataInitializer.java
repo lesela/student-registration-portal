@@ -175,14 +175,25 @@ public class DataInitializer implements ApplicationRunner {
             return;
         }
 
+        Student admin = Student.builder()
+                .name("Admin")
+                .email("admin@portal.edu")
+                .password(passwordEncoder.encode("admin123"))
+                .totalCredits(0)
+                .role("ADMIN")
+                .build();
+
         Student student1 = Student.builder()
                 .name("Lesela")
                 .email("lesela@university.edu")
                 .password(passwordEncoder.encode("password"))
                 .totalCredits(0)
+                .role("STUDENT")
                 .build();
 
+        studentRepository.save(admin);
         studentRepository.save(student1);
-        logger.info("Successfully seeded Lesela student profile (lesela@university.edu / password).");
+        logger.info("Seeded admin account: admin@portal.edu / admin123");
+        logger.info("Seeded student account: lesela@university.edu / password");
     }
 }

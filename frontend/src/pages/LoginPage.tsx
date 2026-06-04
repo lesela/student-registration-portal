@@ -89,8 +89,8 @@ export const LoginPage: React.FC = () => {
           <div className="space-y-6 my-auto">
             {/* Title & Header */}
             <div>
-              <h2 className="text-3xl font-extrabold tracking-tight text-white">
-                Login
+              <h2 className="text-3xl font-extrabold tracking-tight">
+                <span className="animated-gradient-text">Login</span>
               </h2>
               <p className="text-xs text-slate-400 mt-1 font-semibold">
                 Enter your account details
@@ -172,7 +172,7 @@ export const LoginPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-11 bg-[#5B8A72] hover:bg-[#4A705E] active:scale-[0.98] text-white text-sm font-bold rounded-2xl flex items-center justify-center space-x-2 shadow-lg shadow-[#5B8A72]/20 transition-all cursor-pointer"
+                  className="shimmer-btn w-full h-11 rounded-2xl text-white text-sm font-bold flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <span className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -221,6 +221,7 @@ export const LoginPage: React.FC = () => {
           </div>
 
         </div>
+
 
       </motion.div>
     </div>

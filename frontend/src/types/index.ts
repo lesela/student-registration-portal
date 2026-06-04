@@ -3,6 +3,7 @@ export interface Student {
   name: string;
   email: string;
   totalCredits: number;
+  role: 'ADMIN' | 'STUDENT';
 }
 
 export interface Course {

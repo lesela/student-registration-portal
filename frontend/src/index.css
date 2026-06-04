@@ -84,82 +84,204 @@
   }
 }
 
-/* Glassmorphism Styles */
+/* ─── Glassmorphism ─────────────────────────────────────────────────────── */
 .glass {
   background: rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
-
 .dark .glass {
   background: rgba(10, 10, 10, 0.5);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
-
 .glass-card {
   @apply rounded-xl shadow-lg border border-white/10 dark:border-white/5;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.03) 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
   backdrop-filter: blur(20px);
 }
-
 .dark .glass-card {
-  background: linear-gradient(135deg, rgba(15, 15, 20, 0.6) 0%, rgba(5, 5, 10, 0.4) 100%);
+  background: linear-gradient(135deg, rgba(15,15,20,0.6) 0%, rgba(5,5,10,0.4) 100%);
 }
 
-/* Modern Gradient Text */
+/* ─── Gradient Text ─────────────────────────────────────────────────────── */
 .gradient-text {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-[#5B8A72] via-[#7BC96F] to-[#A8D5BA];
 }
-
 .dark .gradient-text {
   @apply bg-clip-text text-transparent bg-gradient-to-r from-[#7BC96F] via-[#A8D5BA] to-emerald-400;
 }
 
-/* Custom Scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* ─── Animated Gradient Text (21st.dev / magicui style) ─────────────────── */
+.animated-gradient-text {
+  background: linear-gradient(90deg, #5B8A72 0%, #7BC96F 30%, #A8D5BA 50%, #7BC96F 70%, #5B8A72 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-flow 5s linear infinite;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/45 transition-colors;
+@keyframes gradient-flow {
+  0%   { background-position: 0% center; }
+  100% { background-position: 250% center; }
 }
 
-/* Custom Floating Animation */
+/* ─── Shimmer Button (21st.dev magicui/shimmer-button style) ────────────── */
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #5B8A72, #7BC96F);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -75%;
+  width: 50%; height: 200%;
+  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-20deg);
+  animation: shimmer-sweep 2.8s ease-in-out infinite;
+}
+.shimmer-btn:hover { box-shadow: 0 8px 32px rgba(91,138,114,0.5); transform: translateY(-2px); }
+@keyframes shimmer-sweep {
+  0%   { left: -75%; }
+  55%  { left: 125%; }
+  100% { left: 125%; }
+}
+
+/* ─── Glow Border Card (21st.dev aceternity/card-hover-effect) ──────────── */
+.glow-card {
+  position: relative;
+  border-radius: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  isolation: isolate;
+}
+.glow-card::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #5B8A72, #7BC96F, #A8D5BA, #5B8A72);
+  background-size: 300% 300%;
+  opacity: 0;
+  z-index: -1;
+  animation: glow-rotate 4s linear infinite;
+  transition: opacity 0.35s ease;
+}
+.glow-card:hover::before { opacity: 1; }
+.glow-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(91,138,114,0.18); }
+@keyframes glow-rotate {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ─── Spotlight Hover Card (21st.dev style) ─────────────────────────────── */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.spotlight-card:hover { transform: translateY(-4px); box-shadow: 0 20px 56px rgba(91,138,114,0.15); }
+.spotlight-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(500px circle at var(--x,50%) var(--y,50%), rgba(91,138,114,0.14), transparent 65%);
+  transition: opacity 0.3s ease;
+  border-radius: 20px;
+}
+.spotlight-card:hover .spotlight-overlay { opacity: 1; }
+
+/* ─── Bento Stat Card ───────────────────────────────────────────────────── */
+.bento-stat {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 1.25rem 1.5rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.bento-stat::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 140px; height: 140px;
+  background: radial-gradient(circle, rgba(91,138,114,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(35%, -35%);
+}
+.bento-stat:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(91,138,114,0.14); }
+
+/* ─── Number Counter Animation ──────────────────────────────────────────── */
+.counter-animate {
+  display: inline-block;
+  animation: count-up 0.7s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Frosted Glass Table Row ───────────────────────────────────────────── */
+.frost-row { transition: background 0.2s ease; }
+.frost-row:hover { background: rgba(91,138,114,0.07); }
+
+/* ─── Glow Focus Input ──────────────────────────────────────────────────── */
+.glow-input { transition: box-shadow 0.25s ease, border-color 0.25s ease; }
+.glow-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(91,138,114,0.22), 0 0 24px rgba(91,138,114,0.1);
+  border-color: #5B8A72 !important;
+}
+
+/* ─── Badge Pulse Ring ──────────────────────────────────────────────────── */
+.badge-pulse { position: relative; }
+.badge-pulse::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  background: rgba(91,138,114,0.35);
+  animation: badge-ring 2.2s ease-out infinite;
+}
+@keyframes badge-ring {
+  0%   { transform: scale(0.9); opacity: 0.7; }
+  70%  { transform: scale(1.2); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* ─── Meteor Effect (magicui/meteors style) ─────────────────────────────── */
+@keyframes meteor-fall {
+  0%   { transform: rotate(215deg) translateX(0); opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: rotate(215deg) translateX(-500px); opacity: 0; }
+}
+.animate-meteor { animation: meteor-fall linear infinite; }
+
+/* ─── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { @apply bg-muted-foreground/20 rounded-full hover:bg-muted-foreground/45; }
+
+/* ─── Float ─────────────────────────────────────────────────────────────── */
 @keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-15px) rotate(2deg); }
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-15px) rotate(2deg); }
   100% { transform: translateY(0px) rotate(0deg); }
 }
+.animate-float          { animation: float 6s ease-in-out infinite; }
+.animate-float-delayed  { animation: float 8s ease-in-out infinite; animation-delay: 2s; }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-.animate-float-delayed {
-  animation: float 8s ease-in-out infinite;
-  animation-delay: 2s;
-}
-
-/* Particle / Moving Gradients background */
+/* ─── Mesh BG ────────────────────────────────────────────────────────────── */
 .mesh-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.35;
-  filter: blur(150px);
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  opacity: 0.35; filter: blur(150px); z-index: 0; overflow: hidden; pointer-events: none;
 }
+.dark .mesh-bg { opacity: 0.18; }
 
-.dark .mesh-bg {
-  opacity: 0.18;
-}

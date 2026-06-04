@@ -6,6 +6,7 @@ interface AuthContextType {
   student: Student | null;
   token: string | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isLoading: boolean;
   login: (token: string, student: Student) => void;
   logout: () => void;
@@ -68,6 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         student,
         token,
         isAuthenticated: !!token,
+        isAdmin: student?.role === 'ADMIN',
         isLoading,
         login,
         logout,

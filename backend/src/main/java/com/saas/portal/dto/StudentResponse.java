@@ -14,4 +14,5 @@ public class StudentResponse {
     private String name;
     private String email;
     private Integer totalCredits;
+    private String role;
 }

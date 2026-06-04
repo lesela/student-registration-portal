@@ -12,6 +12,7 @@ import { DashboardPage } from './pages/DashboardPage';
 import { CatalogPage } from './pages/CatalogPage';
 import { ManagementPage } from './pages/ManagementPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { AdminPage } from './pages/AdminPage';
 
 // Layouts & Drawers
 import { DashboardLayout } from './layouts/DashboardLayout';
@@ -34,9 +35,9 @@ const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
-// 2. Public-Only Route Guard (redirects already logged-in users to /dashboard)
-const PublicRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+// 2. Admin-Only Route Guard
+const AdminRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+  const { isAuthenticated, isAdmin, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -46,10 +47,30 @@ const PublicRoute: React.FC<{ children: React.ReactElement }> = ({ children }) =
     );
   }
 
-  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isAdmin) return <Navigate to="/dashboard" replace />;
+  return children;
 };
 
-// 3. Wrapper to inject Dashboard Shell and Cart Drawer dynamically
+// 3. Public-Only Route Guard (redirects already logged-in users to /dashboard)
+const PublicRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+  const { isAuthenticated, isAdmin, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center space-y-4">
+        <Loader variant="spinner" />
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to={isAdmin ? '/admin' : '/dashboard'} replace />;
+  }
+  return children;
+};
+
+// 4. Wrapper to inject Dashboard Shell and Cart Drawer dynamically
 const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
@@ -105,6 +126,18 @@ const AppContent: React.FC = () => {
                 {wrapInTransition(<RegisterPage />)}
               </PublicRoute>
             } 
+          />
+
+          {/* Admin-Only Route */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <DashboardLayout onOpenCart={() => setIsCartOpen(true)}>
+                  {wrapInTransition(<AdminPage />)}
+                </DashboardLayout>
+              </AdminRoute>
+            }
           />
 
           {/* Private Shell Views */}

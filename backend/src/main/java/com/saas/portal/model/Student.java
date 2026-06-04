@@ -26,4 +26,8 @@ public class Student {
 
     @Column(name = "total_credits", nullable = false)
     private Integer totalCredits = 0;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private String role = "STUDENT";
 }

@@ -372,44 +372,67 @@ export const DashboardPage: React.FC = () => {
       {/* Banner / Greeting & Stats Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Welcome Banner Card */}
-        <div className="lg:col-span-2 relative p-6 rounded-[32px] bg-gradient-to-r from-[#FAFDF6] to-[#F2F8F5] dark:from-emerald-950/10 dark:to-emerald-900/10 border border-[#E3EFE8] dark:border-emerald-900/30 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.01)] hover:shadow-[0_12px_40px_rgba(91,138,114,0.04)] transition-all">
-          <div className="absolute right-6 bottom-2 opacity-15 pointer-events-none transform translate-y-2 select-none">
-            <span className="text-7xl sm:text-8xl">🌱</span>
+        {/* Welcome Banner — animated gradient heading + shimmer mesh bg */}
+        <div className="lg:col-span-2 relative p-7 rounded-[28px] overflow-hidden border border-[#D8EDE2] dark:border-emerald-900/30 bg-gradient-to-br from-[#F5FBF7] via-[#FAFDF6] to-[#EEF7F0] dark:from-emerald-950/15 dark:via-slate-900/80 dark:to-emerald-900/10 shadow-[0_8px_40px_rgba(91,138,114,0.08)] hover:shadow-[0_16px_56px_rgba(91,138,114,0.14)] transition-all duration-500">
+          {/* Mesh blobs */}
+          <div className="pointer-events-none select-none">
+            <div className="absolute -top-6 -right-8 w-40 h-40 rounded-full bg-[#7BC96F]/20 dark:bg-emerald-500/10 blur-3xl" />
+            <div className="absolute bottom-0 left-12 w-28 h-28 rounded-full bg-[#A8D5BA]/30 dark:bg-emerald-700/10 blur-2xl" />
           </div>
-          <div className="relative z-10 space-y-1.5">
-            <span className="text-[10px] font-bold text-[#5B8A72] dark:text-[#7BC96F] uppercase tracking-wider bg-[#E3EFE8]/60 dark:bg-emerald-900/30 px-3 py-1 rounded-full animate-float">
-              Lesela eCourse Portal ✨
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-slate-100">
-              Welcome back, {loggedInStudent?.name || 'Lesela'}! 👋
+          {/* Floating badge */}
+          <div className="relative z-10 space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E3EFE8]/80 dark:bg-emerald-900/40 border border-[#C6E0D0]/70 dark:border-emerald-800/50 animate-float">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#7BC96F] badge-pulse" />
+              <span className="text-[10px] font-bold text-[#5B8A72] dark:text-[#7BC96F] uppercase tracking-widest">Lesela eCourse Portal</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">
+              <span className="text-foreground">Welcome back, </span>
+              <span className="animated-gradient-text">{loggedInStudent?.name || 'Student'}</span>
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md leading-relaxed">
-              Explore your registered classes, manage your dynamic calendar schedule, or search the directory for upcoming classes. Let's make learning beautiful!
+            <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
+              Explore your classes, manage your schedule, and discover new courses in the catalog.
             </p>
+            <div className="flex gap-3 mt-1">
+              <Link to="/catalog">
+                <button className="shimmer-btn px-5 py-2.5 rounded-xl text-white text-xs font-bold">
+                  Browse Catalog
+                </button>
+              </Link>
+              <Link to="/management">
+                <button className="px-5 py-2.5 rounded-xl text-xs font-bold border border-[#5B8A72]/30 text-[#5B8A72] dark:text-[#7BC96F] hover:bg-[#5B8A72]/10 transition-all">
+                  My Schedule
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
 
-        {/* Profile Card */}
-        <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 rounded-[32px] p-5 shadow-[0_12px_40px_rgba(0,0,0,0.01)] hover:shadow-[0_20px_50px_rgba(91,138,114,0.05)] hover:-translate-y-0.5 transition-all duration-350 flex items-center justify-between">
-          <div className="flex items-center space-x-4 min-w-0">
-            {/* Initials badge */}
-            <div className="h-14 w-14 rounded-[22px] bg-gradient-to-tr from-[#5B8A72] to-[#7BC96F] text-white flex items-center justify-center font-extrabold text-lg tracking-wide shadow-md shadow-[#5B8A72]/20 flex-shrink-0">
+        {/* Profile Card — spotlight hover effect */}
+        <div
+          className="spotlight-card bg-card border border-border/60 p-5 flex items-center justify-between group"
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            e.currentTarget.style.setProperty('--x', `${e.clientX - rect.left}px`);
+            e.currentTarget.style.setProperty('--y', `${e.clientY - rect.top}px`);
+          }}
+        >
+          <div className="spotlight-overlay" />
+          <div className="flex items-center space-x-4 min-w-0 relative z-10">
+            <div className="h-14 w-14 rounded-[22px] bg-gradient-to-tr from-[#5B8A72] to-[#7BC96F] text-white flex items-center justify-center font-extrabold text-lg shadow-lg shadow-[#5B8A72]/25 flex-shrink-0">
               {loggedInStudent?.name ? loggedInStudent.name.substring(0, 2).toUpperCase() : 'LE'}
             </div>
             <div className="min-w-0">
-              <h4 className="text-base font-extrabold text-slate-850 dark:text-slate-100 truncate">
-                {loggedInStudent?.name || 'Lesela'}
-              </h4>
-              <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mt-1 uppercase tracking-wider">
-                Student ID: {loggedInStudent?.id ? `109488${loggedInStudent.id}` : '1094881001'}
+              <h4 className="text-base font-extrabold text-foreground truncate">{loggedInStudent?.name || 'Student'}</h4>
+              <p className="text-[10px] font-bold text-muted-foreground mt-0.5 uppercase tracking-wider">
+                ID: {loggedInStudent?.id ? `109488${loggedInStudent.id}` : '1094881'}
               </p>
-              <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5 truncate">
-                {loggedInStudent?.email || 'lesela@university.edu'}
-              </p>
+              <p className="text-xs text-muted-foreground mt-0.5 truncate">{loggedInStudent?.email}</p>
             </div>
           </div>
-          <div className="h-3 w-3 rounded-full bg-[#7BC96F] animate-pulse flex-shrink-0 shadow-sm shadow-[#7BC96F]" title="Portal Session Active" />
+          <div className="relative z-10 flex flex-col items-end gap-2">
+            <div className="h-2.5 w-2.5 rounded-full bg-[#7BC96F] animate-pulse shadow-sm shadow-[#7BC96F]" title="Active" />
+            <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Online</span>
+          </div>
         </div>
       </div>
 
@@ -421,59 +444,60 @@ export const DashboardPage: React.FC = () => {
             ======================================================================= */}
         <div className="lg:col-span-2 space-y-6">
           
-          {/* Quick Stats Grid */}
+          {/* Bento Stat Cards (21st.dev bento-stat + counter-animate) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Stat 1: Registered Courses Count */}
-            <div className="bg-white/60 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 rounded-[28px] p-4.5 flex items-center space-x-4 shadow-[0_8px_30px_rgb(0,0,0,0.01)] hover:shadow-[0_12px_45px_rgba(91,138,114,0.06)] hover:-translate-y-0.5 transition-all">
-              <div className="h-10 w-10 rounded-2xl bg-[#E3EFE8] dark:bg-emerald-950/40 flex items-center justify-center text-[#5B8A72] text-lg shadow-sm">
-                📚
+            {/* Stat 1 */}
+            <div className="bento-stat">
+              <div className="flex items-start justify-between mb-3">
+                <div className="h-9 w-9 rounded-xl bg-[#E3EFE8] dark:bg-emerald-900/40 flex items-center justify-center text-[#5B8A72] text-base">
+                  📚
+                </div>
+                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest bg-muted/60 px-2 py-0.5 rounded-full">Enrolled</span>
               </div>
-              <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Registered Courses</span>
-                <span className="text-lg font-extrabold text-slate-850 dark:text-slate-100 block mt-0.5">
-                  {myRegisteredClasses.length} <span className="text-xs font-semibold text-slate-400">course{myRegisteredClasses.length !== 1 && 's'}</span>
-                </span>
-                <Link to="/management" className="text-[10px] font-bold text-[#5B8A72] dark:text-[#7BC96F] hover:underline mt-1 block">
-                  Manage Classes →
-                </Link>
+              <div className="counter-animate">
+                <span className="number-font text-3xl font-extrabold text-foreground">{myRegisteredClasses.length}</span>
+                <span className="text-xs text-muted-foreground ml-1.5">course{myRegisteredClasses.length !== 1 && 's'}</span>
               </div>
+              <Link to="/management" className="text-[10px] font-bold text-[#5B8A72] dark:text-[#7BC96F] hover:underline mt-2 block">
+                Manage →
+              </Link>
             </div>
 
-            {/* Stat 2: Items in Cart (Drafts) */}
-            <div className="bg-white/60 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 rounded-[28px] p-4.5 flex items-center space-x-4 shadow-[0_8px_30px_rgb(0,0,0,0.01)] hover:shadow-[0_12px_45px_rgba(91,138,114,0.06)] hover:-translate-y-0.5 transition-all">
-              <div className="h-10 w-10 rounded-2xl bg-[#FAFDF6] dark:bg-lime-950/40 flex items-center justify-center text-[#7BC96F] text-lg shadow-sm">
-                🛒
+            {/* Stat 2 */}
+            <div className="bento-stat">
+              <div className="flex items-start justify-between mb-3">
+                <div className="h-9 w-9 rounded-xl bg-[#E3EFE8] dark:bg-emerald-900/40 flex items-center justify-center text-[#5B8A72] text-base">
+                  🛒
+                </div>
+                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest bg-muted/60 px-2 py-0.5 rounded-full">Cart</span>
               </div>
-              <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">In Cart (Draft)</span>
-                <span className="text-lg font-extrabold text-slate-850 dark:text-slate-100 block mt-0.5">
-                  {myCartCourses.length} <span className="text-xs font-semibold text-slate-400">course{myCartCourses.length !== 1 && 's'}</span>
-                </span>
-                <Link to="/catalog" className="text-[10px] font-bold text-[#5B8A72] dark:text-[#7BC96F] hover:underline mt-1 block">
-                  Go to Catalog →
-                </Link>
+              <div className="counter-animate">
+                <span className="number-font text-3xl font-extrabold text-foreground">{myCartCourses.length}</span>
+                <span className="text-xs text-muted-foreground ml-1.5">pending</span>
               </div>
+              <span className="text-[10px] font-bold text-muted-foreground mt-2 block">Ready to enroll</span>
             </div>
 
-            {/* Stat 3: Total Scheduled Class Days */}
-            <div className="bg-white/60 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 rounded-[28px] p-4.5 flex items-center space-x-4 shadow-[0_8px_30px_rgb(0,0,0,0.01)] hover:shadow-[0_12px_45px_rgba(91,138,114,0.06)] hover:-translate-y-0.5 transition-all">
-              <div className="h-10 w-10 rounded-2xl bg-[#F5F8F2] dark:bg-green-950/40 flex items-center justify-center text-[#8FB075] text-lg shadow-sm">
-                📅
+            {/* Stat 3 */}
+            <div className="bento-stat">
+              <div className="flex items-start justify-between mb-3">
+                <div className="h-9 w-9 rounded-xl bg-[#E3EFE8] dark:bg-emerald-900/40 flex items-center justify-center text-[#5B8A72] text-base">
+                  ⚡
+                </div>
+                <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest bg-muted/60 px-2 py-0.5 rounded-full">Credits</span>
               </div>
-              <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Weekly Days</span>
-                <span className="text-lg font-extrabold text-slate-850 dark:text-slate-100 block mt-0.5">
-                  {highlightedScheduledDays.length} <span className="text-xs font-semibold text-slate-400">class day{highlightedScheduledDays.length !== 1 && 's'}</span>
+              <div className="counter-animate">
+                <span className="number-font text-3xl font-extrabold text-foreground">
+                  {myRegisteredClasses.reduce((sum, r) => sum + (r.course?.credits || 0), 0)}
                 </span>
-                <span className="text-[9px] text-slate-400 font-bold block mt-1 truncate uppercase">
-                  {highlightedScheduledDays.length > 0 ? highlightedScheduledDays.join(', ') : 'No classes'}
-                </span>
+                <span className="text-xs text-muted-foreground ml-1.5">credits</span>
               </div>
+              <span className="text-[10px] font-bold text-muted-foreground mt-2 block">This semester</span>
             </div>
           </div>
 
-          {/* User-friendly Filters Panel */}
-          <div className="bg-white/50 dark:bg-slate-900/40 border border-slate-200/60 dark:border-slate-800 rounded-[32px] p-5 space-y-4 shadow-[0_8px_30px_rgb(0,0,0,0.005)]">
+          {/* Search and Filters Panel */}
+          <div className="bg-card border border-border/60 rounded-[24px] p-5 space-y-4">
             
             {/* Row 1: Search box and title */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -488,7 +512,7 @@ export const DashboardPage: React.FC = () => {
                   placeholder="Search course code, name, instructor..."
                   value={searchedKeyword}
                   onChange={(e) => setSearchedKeyword(e.target.value)}
-                  className="w-full h-10 pl-9 pr-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900/80 text-xs font-semibold text-slate-700 dark:text-slate-200 placeholder:text-slate-400 focus:outline-none focus:border-[#5B8A72] focus:ring-1 focus:ring-[#5B8A72] transition-all shadow-2xs"
+                  className="glow-input w-full h-10 pl-9 pr-4 rounded-2xl border border-border bg-card text-xs font-semibold text-foreground placeholder:text-muted-foreground shadow-sm"
                 />
               </div>
             </div>
@@ -637,61 +661,49 @@ export const DashboardPage: React.FC = () => {
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
-                        className={`group relative flex flex-col md:flex-row items-center p-5 rounded-[32px] border ${theme.border} ${theme.bg} shadow-[0_12px_30px_-10px_rgba(91,138,114,0.08)] hover:shadow-[0_20px_40px_-5px_rgba(91,138,114,0.18)] hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300`}
+                        className="glow-card spotlight-card bg-card border border-border/60 flex flex-col md:flex-row items-center p-5 group"
+                        onMouseMove={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          e.currentTarget.style.setProperty('--x', `${e.clientX - rect.left}px`);
+                          e.currentTarget.style.setProperty('--y', `${e.clientY - rect.top}px`);
+                        }}
                       >
-                        {/* Left Graphic decoration */}
-                        <div className="relative w-full md:w-36 h-24 md:h-28 rounded-2xl flex-shrink-0 flex items-center justify-center overflow-hidden mb-4 md:mb-0 md:mr-6 bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800">
-                          <div className={`absolute inset-0 opacity-20 ${theme.graphicBg} scale-90 rounded-2xl animate-pulse-slow`} />
-                          <div className="relative z-10 flex flex-col items-center">
-                            <div className={`p-3 rounded-2xl ${theme.graphicBg} shadow-inner`}>
-                              <SubjectIcon className={`h-7 w-7 ${theme.iconColor}`} />
-                            </div>
+                        <div className="spotlight-overlay" />
+                        {/* Left Icon */}
+                        <div className={`relative w-full md:w-32 h-20 md:h-24 rounded-2xl flex-shrink-0 flex items-center justify-center overflow-hidden mb-4 md:mb-0 md:mr-5 ${theme.graphicBg} border border-border/40`}>
+                          <div className={`p-3 rounded-2xl bg-white/70 dark:bg-slate-900/60 shadow-inner`}>
+                            <SubjectIcon className={`h-7 w-7 ${theme.iconColor}`} />
                           </div>
-                          <div className="absolute top-2 left-2 h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />
-                          <div className="absolute bottom-2 right-2 h-2.5 w-2.5 rounded-full border border-slate-200 dark:border-slate-800" />
                         </div>
 
-                        {/* Details summary */}
-                        <div className="flex-1 text-center md:text-left min-w-0 pr-0 md:pr-4">
-                          <div className="flex items-center justify-center md:justify-start space-x-2">
-                            <span className="text-[10px] font-extrabold bg-white/80 dark:bg-slate-900/80 px-2.5 py-0.5 rounded-full text-slate-450 dark:text-slate-500 uppercase tracking-widest shadow-3xs border border-slate-100/50 dark:border-slate-800/30">
-                              {mockCourse.code}
+                        {/* Details */}
+                        <div className="flex-1 text-center md:text-left min-w-0 pr-0 md:pr-4 relative z-10">
+                          <span className={`text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-widest ${theme.text} bg-current/10`} style={{ backgroundColor: 'transparent' }}>
+                            <span className={`${theme.text}`}>{mockCourse.code}</span>
+                          </span>
+                          <h3 className="text-base font-bold text-foreground mt-1.5 truncate">{mockCourse.name}</h3>
+                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2 max-w-lg leading-relaxed">{descriptionText}</p>
+                          <div className="flex items-center justify-center md:justify-start gap-2 mt-3 flex-wrap">
+                            <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${theme.text} border-current/30 bg-current/5`} style={{ background: 'transparent' }}>
+                              <span className={theme.text}>📅 {mockCourse.day}</span>
                             </span>
-
-                          </div>
-                          
-                          <h3 className="text-lg font-bold text-slate-850 dark:text-slate-100 mt-2 truncate">
-                            {mockCourse.name}
-                          </h3>
-                          
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5 line-clamp-2 max-w-lg leading-relaxed">
-                            {descriptionText}
-                          </p>
-
-                          <div className="flex items-center justify-center md:justify-start space-x-3 mt-3 flex-wrap gap-y-1.5">
-                            <span className="flex items-center text-[10px] font-bold text-[#5B8A72] dark:text-[#7BC96F] bg-white/80 dark:bg-slate-900/60 px-2.5 py-0.5 rounded-md border border-slate-100 dark:border-slate-800 shadow-3xs">
-                              📅 {mockCourse.day}
-                            </span>
-                            <span className="flex items-center text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-white/80 dark:bg-slate-900/60 px-2.5 py-0.5 rounded-md border border-slate-100 dark:border-slate-800 shadow-3xs">
-                              ⏰ {mockCourse.startTime.substring(0, 5)} - {mockCourse.endTime.substring(0, 5)}
+                            <span className="text-[10px] font-bold text-muted-foreground bg-muted/50 px-2.5 py-0.5 rounded-full">
+                              ⏰ {mockCourse.startTime.substring(0, 5)} – {mockCourse.endTime.substring(0, 5)}
                             </span>
                           </div>
-                          
-                          <p className="text-[11px] font-bold text-slate-450 dark:text-slate-550 mt-3.5">
-                            Professor: <span className="text-slate-650 dark:text-slate-300 font-semibold">{mockCourse.instructor}</span>
+                          <p className="text-[11px] text-muted-foreground mt-2">
+                            <span className="font-semibold">Prof.</span> {mockCourse.instructor}
                           </p>
                         </div>
 
-                        {/* Redirect button to Catalog Page */}
-                        <Link to="/catalog" className="mt-4 md:mt-0 flex-shrink-0">
-                          <motion.button
-                            whileHover={{ scale: 1.1, x: 4 }}
-                            whileTap={{ scale: 0.9 }}
-                            className={`h-11 w-11 rounded-full ${theme.accent} flex items-center justify-center text-white shadow-md shadow-[#5B8A72]/20 transition-all cursor-pointer`}
+                        {/* CTA */}
+                        <Link to="/catalog" className="mt-4 md:mt-0 flex-shrink-0 relative z-10">
+                          <button
+                            className={`shimmer-btn h-10 px-4 rounded-xl text-white text-xs font-bold flex items-center gap-1.5`}
                             title="Register on Catalog"
                           >
-                            <ChevronRight className="h-5 w-5" />
-                          </motion.button>
+                            Enroll <ChevronRight className="h-3.5 w-3.5" />
+                          </button>
                         </Link>
                       </motion.div>
                     );

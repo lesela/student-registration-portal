@@ -9,8 +9,7 @@ import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 import { courseService } from '../services/courseService';
 import { registrationService } from '../services/registrationService';
-import { Card, CardContent } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
 import { Loader } from '../components/ui/Loader';
 import type { Course } from '../types';
 
@@ -134,8 +133,13 @@ export const CatalogPage: React.FC = () => {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-extrabold tracking-tight">Course Directory</h2>
-          <p className="text-sm text-muted-foreground">Discover, filter, and plan your ideal syllabus schedule.</p>
+          <h2 className="text-2xl font-extrabold tracking-tight">
+            <span className="animated-gradient-text">Course Directory</span>
+          </h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Discover, filter, and plan your ideal syllabus schedule.</p>
+        </div>
+        <div className="text-xs text-muted-foreground font-semibold bg-muted/60 px-3 py-1.5 rounded-full border border-border/40">
+          <span className="counter-animate text-foreground font-bold">{processedCourses.length}</span> of {courses.length} courses
         </div>
       </div>
 
@@ -150,7 +154,7 @@ export const CatalogPage: React.FC = () => {
               placeholder="Search by course code, title, or professor..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex h-11 w-full rounded-lg border border-input bg-transparent pl-10 pr-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="glow-input flex h-11 w-full rounded-xl border border-border bg-card pl-10 pr-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
             />
           </div>
 
@@ -233,103 +237,105 @@ export const CatalogPage: React.FC = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
-                  whileHover={{ y: -4 }}
+                  className="glow-card spotlight-card bg-card border border-border/60 flex flex-col justify-between h-full"
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    e.currentTarget.style.setProperty('--x', `${e.clientX - rect.left}px`);
+                    e.currentTarget.style.setProperty('--y', `${e.clientY - rect.top}px`);
+                  }}
                 >
-                  <Card glass={true} className={`relative flex flex-col justify-between h-full border-t-2 ${
-                    isRegistered 
-                      ? 'border-t-emerald-500' 
-                      : isInCart 
-                      ? 'border-t-primary' 
-                      : hasConflict && !isRegistered 
-                      ? 'border-t-amber-500' 
-                      : 'border-t-border'
-                  }`}>
-                    <CardContent className="p-6 space-y-4 flex-1">
-                      {/* Department and Code */}
-                      <div className="flex justify-between items-center">
-                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-muted text-muted-foreground">
-                          {course.department}
-                        </span>
-                        <span className="text-xs font-mono font-bold text-primary">
-                          {course.code}
-                        </span>
-                      </div>
-
-                      {/* Course Title & Instructor */}
-                      <div className="space-y-1">
-                        <h3 className="font-extrabold text-base text-foreground leading-snug tracking-tight group-hover:text-primary transition-colors">
-                          {course.name}
-                        </h3>
-                        <p className="text-xs text-muted-foreground flex items-center">
-                          <User className="h-3.5 w-3.5 mr-1 text-muted-foreground/70" />
-                          {course.instructor}
-                        </p>
-                      </div>
-
-                      {/* Timeline Day & Time slot */}
-                      <div className="flex flex-col space-y-1.5 text-xs bg-muted/30 p-2.5 rounded-lg border border-border/30">
-                        <div className="flex items-center space-x-1.5 font-bold text-foreground">
-                          <Clock className="h-3.5 w-3.5 text-indigo-500" />
-                          <span>{course.day}</span>
-                        </div>
-                        <div className="text-muted-foreground font-semibold pl-5">
-                          {course.startTime.slice(0, 5)} - {course.endTime.slice(0, 5)}
-                        </div>
-                      </div>
-
-                      {/* Credit details & Capacity seats bar */}
-                      <div className="space-y-2 pt-2">
-                        <div className="flex justify-between items-center text-xs">
-                          <span className="text-muted-foreground font-semibold">Enrolled Capacity:</span>
-                          <span className={`font-bold ${isFull ? 'text-rose-500 font-extrabold' : 'text-foreground'}`}>
-                            {course.enrolledStudents} / {course.capacity} seats
-                          </span>
-                        </div>
-                        <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                          <div 
-                            className={`h-full rounded-full transition-all duration-300 ${
-                              isFull ? 'bg-rose-500' : 'bg-gradient-to-r from-primary to-indigo-500'
-                            }`}
-                            style={{ width: `${(course.enrolledStudents / course.capacity) * 100}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Conflict alert warnings */}
-                      {!isRegistered && hasConflict && (
-                        <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-start space-x-1.5 text-[11px] font-semibold text-amber-700 dark:text-amber-400">
-                          <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
-                          <div className="leading-normal">
-                            {hasOverlap && "Schedule overlap clash."}
-                            {!hasOverlap && isFull && "Course is full."}
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-
-                    {/* Footer Actions */}
-                    <div className="p-6 pt-0 border-t border-border/40 mt-auto flex items-center justify-between">
-
-
-                      {isRegistered ? (
-                        <div className="flex items-center space-x-1 text-xs font-bold text-emerald-500 bg-emerald-500/10 px-3 py-1.5 rounded-lg border border-emerald-500/20">
-                          <Check className="h-4 w-4" />
-                          <span>Registered</span>
-                        </div>
-                      ) : (
-                        <Button
-                          size="sm"
-                          variant={isInCart ? 'outline' : 'primary'}
-                          onClick={() => handleCartAction(course)}
-                          className="flex items-center space-x-1.5"
-                        >
-                          <ShoppingCart className="h-3.5 w-3.5" />
-                          <span>{isInCart ? 'Remove' : 'Add to Cart'}</span>
-                        </Button>
-                      )}
+                  <div className="spotlight-overlay" />
+                  <div className={`h-1 w-full rounded-t-[20px] ${
+                    isRegistered ? 'bg-emerald-500' : isInCart ? 'bg-primary' : hasConflict && !isRegistered ? 'bg-amber-500' : 'bg-gradient-to-r from-[#5B8A72] to-[#7BC96F] opacity-0'
+                  }`} />
+                  <div className="p-5 space-y-4 flex-1 relative z-10">
+                    {/* Department and Code */}
+                    <div className="flex justify-between items-center">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-muted text-muted-foreground">
+                        {course.department}
+                      </span>
+                      <span className="text-xs font-mono font-extrabold text-primary">
+                        {course.code}
+                      </span>
                     </div>
-                  </Card>
-                </motion.div>
+
+                    {/* Course Title & Instructor */}
+                    <div className="space-y-1">
+                      <h3 className="font-extrabold text-base text-foreground leading-snug tracking-tight">
+                        {course.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <User className="h-3.5 w-3.5 text-muted-foreground/70" />
+                        {course.instructor}
+                      </p>
+                    </div>
+
+                    {/* Schedule block — frost style */}
+                    <div className="flex flex-col gap-1 text-xs bg-[#5B8A72]/6 dark:bg-emerald-900/20 border border-[#5B8A72]/15 dark:border-emerald-800/30 p-2.5 rounded-xl">
+                      <div className="flex items-center gap-1.5 font-bold text-foreground">
+                        <Clock className="h-3.5 w-3.5 text-[#5B8A72] dark:text-[#7BC96F]" />
+                        <span>{course.day}</span>
+                      </div>
+                      <div className="text-muted-foreground font-semibold pl-5">
+                        {course.startTime.slice(0, 5)} – {course.endTime.slice(0, 5)}
+                      </div>
+                    </div>
+
+                    {/* Capacity bar */}
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-muted-foreground font-semibold">Capacity</span>
+                        <span className={`font-bold ${isFull ? 'text-rose-500' : 'text-foreground'}`}>
+                          {course.enrolledStudents} / {course.capacity}
+                        </span>
+                      </div>
+                      <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            isFull ? 'bg-rose-500' : 'bg-gradient-to-r from-[#5B8A72] to-[#7BC96F]'
+                          }`}
+                          style={{ width: `${(course.enrolledStudents / course.capacity) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Conflict alert */}
+                    {!isRegistered && hasConflict && (
+                      <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start gap-1.5 text-[11px] font-semibold text-amber-700 dark:text-amber-400">
+                        <AlertTriangle className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
+                        <div>
+                          {hasOverlap && "Schedule overlap clash."}
+                          {!hasOverlap && isFull && "Course is full."}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Footer Actions */}
+                  <div className="px-5 pb-5 pt-3 border-t border-border/40 flex items-center justify-between relative z-10">
+                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+                      {course.credits} credit{course.credits !== 1 && 's'}
+                    </span>
+                    {isRegistered ? (
+                      <div className="flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20">
+                        <Check className="h-3.5 w-3.5" />
+                        <span>Enrolled</span>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => handleCartAction(course)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                          isInCart
+                            ? 'bg-muted border border-border text-foreground hover:bg-muted/80'
+                            : 'shimmer-btn text-white'
+                        }`}
+                      >
+                        <ShoppingCart className="h-3.5 w-3.5" />
+                        <span>{isInCart ? 'Remove' : 'Add to Cart'}</span>
+                      </button>
+                    )}
+                  </div>
+                 </motion.div>
               );
             })}
           </motion.div>
