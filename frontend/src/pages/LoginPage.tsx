@@ -157,16 +157,6 @@ export const LoginPage: React.FC = () => {
                 )}
               </div>
 
-              {/* Demo Accounts badge */}
-              <div className="p-3.5 rounded-2xl bg-white/5 border border-white/5 flex items-start space-x-3 text-xs text-slate-400 leading-normal">
-                <div className="h-2 w-2 rounded-full bg-[#5B8A72] mt-1.5 flex-shrink-0 animate-ping" />
-                <div>
-                  <p className="font-bold text-slate-300">Quick Demo Access:</p>
-                  <p className="text-[11px] mt-0.5">Email: <span className="font-bold text-[#5B8A72] select-all">lesela@university.edu</span></p>
-                  <p className="text-[11px]">Password: <span className="font-bold text-[#5B8A72] select-all">password</span></p>
-                </div>
-              </div>
-
               {/* Login Button */}
               <div className="pt-2">
                 <button
