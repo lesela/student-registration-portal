@@ -198,7 +198,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, onOp
           {/* Title or Page Context */}
           <div className="hidden md:block">
             <h1 className="text-sm font-bold tracking-tight text-muted-foreground">
-              Welcome back, <span className="text-foreground">{student?.name}</span> 👋
+              Welcome back, <span className="text-foreground">{student?.name}</span>
             </h1>
           </div>
 

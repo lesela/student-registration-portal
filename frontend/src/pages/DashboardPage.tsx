@@ -3,7 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   Laptop, Palette, TrendingUp, Atom, BookOpen, LineChart, 
-  Search, ChevronDown, ChevronRight, ChevronLeft, Calendar as CalendarIcon 
+  Search, ChevronDown, ChevronRight, ChevronLeft, Calendar as CalendarIcon,
+  ShoppingCart, Award, Clock
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { registrationService } from '../services/registrationService';
@@ -199,23 +200,23 @@ const availableCoursesSampleList: Course[] = [
 
 // Department choices list with cute icons
 const subjectOptionsList = [
-  { id: 'ALL', label: 'All Subjects', emoji: '✨' },
-  { id: 'COMPUTER SCIENCE', label: 'Comp Science', emoji: '💻' },
-  { id: 'DESIGN', label: 'Design', emoji: '🎨' },
-  { id: 'BUSINESS', label: 'Business', emoji: '📈' },
-  { id: 'PHYSICS', label: 'Physics', emoji: '⚛️' },
-  { id: 'MATHEMATICS', label: 'Math', emoji: '🔢' }
+  { id: 'ALL', label: 'All Subjects' },
+  { id: 'COMPUTER SCIENCE', label: 'Comp Science' },
+  { id: 'DESIGN', label: 'Design' },
+  { id: 'BUSINESS', label: 'Business' },
+  { id: 'PHYSICS', label: 'Physics' },
+  { id: 'MATHEMATICS', label: 'Math' }
 ];
 
 
 // Day options list for weekly calendar filter
 const dayOptionsList = [
-  { id: 'ALL', label: 'Any Day', emoji: '📅' },
-  { id: 'MONDAY', label: 'Monday', emoji: '🌙' },
-  { id: 'TUESDAY', label: 'Tuesday', emoji: '🔥' },
-  { id: 'WEDNESDAY', label: 'Wednesday', emoji: '💧' },
-  { id: 'THURSDAY', label: 'Thursday', emoji: '🌳' },
-  { id: 'FRIDAY', label: 'Friday', emoji: '🪙' }
+  { id: 'ALL', label: 'Any Day' },
+  { id: 'MONDAY', label: 'Monday' },
+  { id: 'TUESDAY', label: 'Tuesday' },
+  { id: 'WEDNESDAY', label: 'Wednesday' },
+  { id: 'THURSDAY', label: 'Thursday' },
+  { id: 'FRIDAY', label: 'Friday' }
 ];
 
 export const DashboardPage: React.FC = () => {
@@ -449,8 +450,8 @@ export const DashboardPage: React.FC = () => {
             {/* Stat 1 */}
             <div className="bento-stat">
               <div className="flex items-start justify-between mb-3">
-                <div className="h-9 w-9 rounded-xl bg-[#E3EFE8] dark:bg-emerald-900/40 flex items-center justify-center text-[#5B8A72] text-base">
-                  📚
+                <div className="h-9 w-9 rounded-xl bg-[#E3EFE8] dark:bg-emerald-900/40 flex items-center justify-center text-[#5B8A72]">
+                  <BookOpen className="h-4 w-4" />
                 </div>
                 <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest bg-muted/60 px-2 py-0.5 rounded-full">Enrolled</span>
               </div>
@@ -466,8 +467,8 @@ export const DashboardPage: React.FC = () => {
             {/* Stat 2 */}
             <div className="bento-stat">
               <div className="flex items-start justify-between mb-3">
-                <div className="h-9 w-9 rounded-xl bg-[#E3EFE8] dark:bg-emerald-900/40 flex items-center justify-center text-[#5B8A72] text-base">
-                  🛒
+                <div className="h-9 w-9 rounded-xl bg-[#E3EFE8] dark:bg-emerald-900/40 flex items-center justify-center text-[#5B8A72]">
+                  <ShoppingCart className="h-4 w-4" />
                 </div>
                 <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest bg-muted/60 px-2 py-0.5 rounded-full">Cart</span>
               </div>
@@ -481,8 +482,8 @@ export const DashboardPage: React.FC = () => {
             {/* Stat 3 */}
             <div className="bento-stat">
               <div className="flex items-start justify-between mb-3">
-                <div className="h-9 w-9 rounded-xl bg-[#E3EFE8] dark:bg-emerald-900/40 flex items-center justify-center text-[#5B8A72] text-base">
-                  ⚡
+                <div className="h-9 w-9 rounded-xl bg-[#E3EFE8] dark:bg-emerald-900/40 flex items-center justify-center text-[#5B8A72]">
+                  <Award className="h-4 w-4" />
                 </div>
                 <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest bg-muted/60 px-2 py-0.5 rounded-full">Credits</span>
               </div>
@@ -502,7 +503,7 @@ export const DashboardPage: React.FC = () => {
             {/* Row 1: Search box and title */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <h3 className="text-lg font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                {userHasRegisteredClasses ? '🔍 Filter My Courses' : '🔍 Filter Available Courses'}
+                {userHasRegisteredClasses ? 'Filter My Courses' : 'Filter Available Courses'}
               </h3>
               
               <div className="relative w-full sm:w-64">
@@ -527,13 +528,12 @@ export const DashboardPage: React.FC = () => {
                     <button
                       key={subjectItem.id}
                       onClick={() => setChosenSubject(subjectItem.id)}
-                      className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap flex-shrink-0 shadow-3xs cursor-pointer ${
+                      className={`flex items-center px-3 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap flex-shrink-0 shadow-3xs cursor-pointer ${
                         isActive
                           ? 'bg-[#5B8A72] text-white shadow-md shadow-[#5B8A72]/20 scale-102 border-transparent'
                           : 'bg-white dark:bg-slate-900 text-slate-650 dark:text-slate-300 border border-slate-100 dark:border-slate-800 hover:border-[#7BC96F] hover:bg-[#FAFDF6] dark:hover:bg-[#7BC96F]/10'
                       }`}
                     >
-                      <span>{subjectItem.emoji}</span>
                       <span>{subjectItem.label}</span>
                     </button>
                   );
@@ -554,7 +554,7 @@ export const DashboardPage: React.FC = () => {
                     className="w-full h-10 px-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none focus:border-[#5B8A72] focus:ring-1 focus:ring-[#5B8A72] transition-all cursor-pointer appearance-none shadow-3xs"
                   >
                     {dayOptionsList.map(dayItem => (
-                      <option key={dayItem.id} value={dayItem.id}>{dayItem.emoji} {dayItem.label}</option>
+                      <option key={dayItem.id} value={dayItem.id}>{dayItem.label}</option>
                     ))}
                   </select>
                   <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -616,10 +616,12 @@ export const DashboardPage: React.FC = () => {
 
                         <div className="flex items-center justify-center md:justify-start space-x-3 mt-3 flex-wrap gap-y-1.5">
                           <span className="flex items-center text-[10px] font-bold text-[#5B8A72] dark:text-[#7BC96F] bg-white/80 dark:bg-slate-900/60 px-2.5 py-0.5 rounded-md border border-slate-100 dark:border-slate-800 shadow-3xs">
-                            📅 {courseObj.day}
+                            <CalendarIcon className="h-3 w-3 mr-1 text-[#5B8A72] dark:text-[#7BC96F]" />
+                            {courseObj.day}
                           </span>
                           <span className="flex items-center text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-white/80 dark:bg-slate-900/60 px-2.5 py-0.5 rounded-md border border-slate-100 dark:border-slate-800 shadow-3xs">
-                            ⏰ {courseObj.startTime.substring(0, 5)} - {courseObj.endTime.substring(0, 5)}
+                            <Clock className="h-3 w-3 mr-1 text-slate-500 dark:text-slate-400" />
+                            {courseObj.startTime.substring(0, 5)} - {courseObj.endTime.substring(0, 5)}
                           </span>
                         </div>
                         
@@ -647,7 +649,7 @@ export const DashboardPage: React.FC = () => {
               // If registrations are empty, render catalog previews matching active filters
               <>
                 <div className="p-4 bg-[#5B8A72]/5 border border-[#5B8A72]/15 rounded-[22px] text-xs font-semibold text-[#5B8A72] dark:text-[#7BC96F]/90 leading-relaxed shadow-3xs">
-                  📢 <span className="font-bold">Lesela eCourse Live Demo Mode:</span> You aren't enrolled in any courses yet! Showing available preview classes. Click the green arrow button to enroll or explore the Catalog to register.
+                  <span className="font-bold">Lesela eCourse Live Demo Mode:</span> You aren't enrolled in any courses yet! Showing available preview classes. Click the green arrow button to enroll or explore the Catalog to register.
                 </div>
                 {filteredPreviewCourses.length > 0 ? (
                   filteredPreviewCourses.map((mockCourse, index) => {
@@ -684,11 +686,13 @@ export const DashboardPage: React.FC = () => {
                           <h3 className="text-base font-bold text-foreground mt-1.5 truncate">{mockCourse.name}</h3>
                           <p className="text-xs text-muted-foreground mt-1 line-clamp-2 max-w-lg leading-relaxed">{descriptionText}</p>
                           <div className="flex items-center justify-center md:justify-start gap-2 mt-3 flex-wrap">
-                            <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${theme.text} border-current/30 bg-current/5`} style={{ background: 'transparent' }}>
-                              <span className={theme.text}>📅 {mockCourse.day}</span>
+                            <span className={`flex items-center text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${theme.text} border-current/30 bg-current/5`} style={{ background: 'transparent' }}>
+                              <CalendarIcon className="h-3 w-3 mr-1" />
+                              <span className={theme.text}>{mockCourse.day}</span>
                             </span>
-                            <span className="text-[10px] font-bold text-muted-foreground bg-muted/50 px-2.5 py-0.5 rounded-full">
-                              ⏰ {mockCourse.startTime.substring(0, 5)} – {mockCourse.endTime.substring(0, 5)}
+                            <span className="flex items-center text-[10px] font-bold text-muted-foreground bg-muted/50 px-2.5 py-0.5 rounded-full">
+                              <Clock className="h-3 w-3 mr-1 text-muted-foreground" />
+                              {mockCourse.startTime.substring(0, 5)} – {mockCourse.endTime.substring(0, 5)}
                             </span>
                           </div>
                           <p className="text-[11px] text-muted-foreground mt-2">
@@ -727,7 +731,7 @@ export const DashboardPage: React.FC = () => {
                     }}
                     className="mt-3 px-4 py-2 text-xs font-bold text-white bg-[#5B8A72] hover:bg-[#7BC96F] rounded-full transition-all shadow-sm cursor-pointer"
                   >
-                    Clear All Filters ✨
+                    Clear All Filters
                   </button>
                 </div>
               </div>
@@ -816,17 +820,17 @@ export const DashboardPage: React.FC = () => {
           {/* Quick Actions Panel */}
           <div className="bg-white/60 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800 rounded-[32px] p-5 shadow-[0_12px_40px_rgba(0,0,0,0.015)] space-y-4">
             <h4 className="text-sm font-extrabold text-slate-850 dark:text-slate-100 flex items-center gap-1.5">
-              ⚡ Quick Actions
+              Quick Actions
             </h4>
             <div className="flex flex-col gap-2">
               <Link to="/catalog" className="w-full">
                 <button className="w-full py-2.5 px-4 rounded-2xl bg-[#E3EFE8] hover:bg-[#5B8A72] text-[#5B8A72] hover:text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2 cursor-pointer shadow-3xs">
-                  <span>📖</span> Explore Course Catalog
+                  Explore Course Catalog
                 </button>
               </Link>
               <Link to="/management" className="w-full">
                 <button className="w-full py-2.5 px-4 rounded-2xl bg-[#FAFDF6] hover:bg-[#7BC96F] text-[#7BC96F] hover:text-white font-bold text-xs transition-all text-center flex items-center justify-center gap-2 cursor-pointer shadow-3xs">
-                  <span>🛠️</span> Manage Registrations
+                  Manage Registrations
                 </button>
               </Link>
             </div>
